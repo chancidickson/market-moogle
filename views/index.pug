@@ -1,0 +1,76 @@
+doctype html
+html(lang="en")
+	head 
+		meta(charset="utf-8")
+		title Market Moogle
+		meta(name="viewport", content="width=device-width, initial-scale=1.0")
+		link(rel="stylesheet", href="https://cdn.skypack.dev/-/bulma@v0.9.3-qiMIbVYAqsanl5Ue4g6H/dist=es2020,mode=raw/css/bulma.css")
+		style.
+			.click-to-copy {
+				cursor: pointer;
+			}
+
+			.notifications {
+				position: fixed;
+				top: 1rem;
+				right: 1rem;
+				z-index: 100;
+			}
+	body.container.mt-5.mb-5
+		.notifications
+			#copied-notification.notification.is-info.is-hidden.p-3 Copied
+		form.mb-6(method="get")
+			.field
+				label.label(for="minVelocity") Min Velocity
+				.control
+					input.input#minVelocity(type="text", name="minVelocity", value=minVelocity)
+			.field
+				label.label(for="maxItems") Max Items
+				.control 
+					input.input#maxItems(type="text", name="maxItems", value=maxItems)
+			.field
+				label.label(for="itemSearchCategory") Item Search Category
+				.control.select
+					select#itemSearchCategory(name="itemSearchCategory")
+						option=(label="", value="")
+						each item in itemSearchCategories
+							option(label=item.name, value=item.id, selected=(item.id.toString() === itemSearchCategory))
+			.control
+				button.button.is-primary Submit
+				button.button.is-danger.ml-3(formaction="/queue/refresh-market-info", formmethod="post") Refresh Market Info
+				button.button.is-danger.ml-3(formaction="/queue/import-ffxiv-data", formmethod="post") Import FFXIV Data
+		table.table.is-bordered.is-striped.is-hoverable.is-narrow.is-fullwidth
+			thead 
+				tr 
+					th Name
+					th HQ
+					th Velocity
+					th Sell Price
+					th Manufacture Cost
+					th Profit 
+					th Profit w/ Tax
+			tbody 
+				each item in reportResults
+					tr
+						td.click-to-copy= item.name
+						td= item.hq ? '✓' : '✗'
+						td.has-text-right= item.velocity.toFixed(2)
+						td.has-text-right= item.sell_price
+						td.has-text-right= item.manufacture_cost
+						td.has-text-right= item.profit
+						td.has-text-right= item.profit_after_tax
+						td
+							a(href="//universalis.app/market/" + item.id, target="_blank", rel="noopener") Universalis
+		script.
+			let prevCopyNotificationTimeout;
+			document.body.addEventListener('click', (e) => {
+				if (e.srcElement.classList.contains('click-to-copy')) {
+					navigator.clipboard.writeText(e.srcElement.innerText);
+					clearTimeout(prevCopyNotificationTimeout);
+					const notification = document.getElementById('copied-notification');
+					notification.classList.remove('is-hidden');
+					prevCopyNotificationTimeout = setTimeout(() => {
+						notification.classList.add('is-hidden');
+					}, 1000);
+				}
+			});

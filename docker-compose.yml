@@ -1,0 +1,27 @@
+version: "3.7"
+
+services:
+  app:
+    build: .
+    restart: on-failure
+    depends_on:
+      - db
+    environment:
+      DB_URL: postgres://market-moogle:market-moogle@db:5432/market-moogle
+      NODE_ENV: development
+      PORT: 3000
+    ports:
+      - 3000:3000
+    volumes:
+      - /home/node/node_modules
+    networks:
+      - default
+  
+  db:
+    image: postgres:13.4-alpine
+    expose:
+      - 5432
+    environment:
+      POSTGRES_USER: market-moogle
+      POSTGRES_PASSWORD: market-moogle
+      POSTGRES_DB: market-moogle
