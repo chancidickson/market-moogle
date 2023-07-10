@@ -1,0 +1,47 @@
+extends _layout
+
+block content
+	form.mb-6(method="get")
+		.field
+			label.label(for="cond") Condition
+			.control
+				input.input#cond(type="text", name="cond", value=query.cond)
+		.field
+			label.label(for="sort") Sort
+			.control
+				input.input#sort(type="text", name="sort", value=query.sort)
+		.control
+			button.button.is-primary Submit
+			button.button.is-danger.ml-3(formaction="/refresh-market-info", formmethod="post") Refresh Market Info
+	div.states
+		each item in states
+			if item.state === "UNFETCHED"
+				p Universalis info for "#{item.name}" has not been fetched.
+			if item.state === "FETCHING"
+				p Universalis info for "#{item.name}" is being fetched.
+			if item.state === "ERROR"
+				p
+					| Universalis info for "#{item.name}" encountered an error.
+					br
+					| #{item.error}
+	if report
+		table.table.is-bordered.is-striped.is-hoverable.is-narrow.is-fullwidth
+			thead 
+				tr 
+					th Name
+					th HQ
+					th Velocity
+					th Sell Price
+					th Manufacture Cost
+					th Profit (w/ Tax)
+			tbody
+				each item in report
+					tr
+						td.click-to-copy= item.name
+						td= item.hq ? '✓' : '✗'
+						td.has-text-right= item.velocity.toFixed(2)
+						td.has-text-right= item.price
+						td.has-text-right= item.cost
+						td.has-text-right= item.profit
+						td
+							a(href="//universalis.app/market/" + item.itemId, target="_blank", rel="noopener") Universalis

@@ -1,0 +1,40 @@
+doctype html
+html(lang="en")
+	head 
+		meta(charset="utf-8")
+		title Market Moogle
+		meta(name="viewport", content="width=device-width, initial-scale=1.0")
+		link(rel="stylesheet", href="https://cdn.skypack.dev/-/bulma@v0.9.3-qiMIbVYAqsanl5Ue4g6H/dist=es2020,mode=raw/css/bulma.css")
+		style.
+			.click-to-copy {
+				cursor: pointer;
+			}
+
+			.notifications {
+				position: fixed;
+				top: 1rem;
+				right: 1rem;
+				z-index: 100;
+			}
+
+			.w-100 {
+				width: 100%;
+			}
+		block head
+	body.container.p-5
+		.notifications
+			#copied-notification.notification.is-info.is-hidden.p-3 Copied
+		block content
+		script.
+			let prevCopyNotificationTimeout;
+			document.body.addEventListener('click', (e) => {
+				if (e.srcElement.classList.contains('click-to-copy')) {
+					navigator.clipboard.writeText(e.srcElement.innerText);
+					clearTimeout(prevCopyNotificationTimeout);
+					const notification = document.getElementById('copied-notification');
+					notification.classList.remove('is-hidden');
+					prevCopyNotificationTimeout = setTimeout(() => {
+						notification.classList.add('is-hidden');
+					}, 1000);
+				}
+			});

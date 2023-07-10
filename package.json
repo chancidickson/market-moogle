@@ -1,0 +1,29 @@
+{
+	"type": "module",
+	"dependencies": {
+		"@types/pug": "^2.0.6",
+		"bottleneck": "^2.19.5",
+		"csv-parse": "^5.0.3",
+		"expression-eval": "^5.0.0",
+		"fastify": "^3.24.1",
+		"fastify-basic-auth": "^2.2.0",
+		"fastify-formbody": "^5.2.0",
+		"got": "^11.8.2",
+		"point-of-view": "^5.0.0",
+		"pug": "^3.0.2"
+	},
+	"devDependencies": {
+		"concurrently": "^6.5.1",
+		"esbuild": "^0.14.9",
+		"nodemon": "^2.0.15",
+		"prettier": "^2.4.1",
+		"typescript": "^4.5.4"
+	},
+	"scripts": {
+		"prod:build": "node scripts/build.js",
+		"prod:server": "node server.out.js",
+		"dev:watch": "node scripts/build.js --watch",
+		"dev:daemon": "nodemon server.out.js",
+		"dev": "concurrently npm:dev:*"
+	}
+}
